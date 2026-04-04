@@ -51,7 +51,7 @@ Roadmap
 
 - [x] raw output mode
 - [x] stdin, stdout support
-- [ ] custom dictionary
+- [x] custom dictionary
 - [ ] self randomizing dictionary
 
 Development

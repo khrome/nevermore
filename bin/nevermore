@@ -39,7 +39,15 @@ yargs(hideBin(process.argv))
         //TODO: custom index
         //TODO: self index
         const { index, root } = await computeIndexKeys(input);
-        const { html, css } = await generateHTMLAndCSS(root, index);
+        let idx = index;
+        if(argv['custom-dictionary']){
+            const result = await readFile(argv['custom-dictionary']);
+            idx = result.toString();
+        }
+        //const { index, root } = await computeIndexKeys(input);
+        console.log(idx);
+        process.exit();
+        const { html, css } = await generateHTMLAndCSS(root, idx);
         if(argv['unified-output']){
             const output = formatHTML(html, css, argv['raw-output']);
             await writeFile(argv['unified-output'], output);
@@ -77,6 +85,10 @@ yargs(hideBin(process.argv))
         type: 'number',
         default: 12,
         description: 'The size of the font in pixels'
+    }).option('custom-dictionary', {
+        alias: 'd',
+        type: 'string',
+        description: 'A json map of replacement words'
     }).option('font', {
         alias: 'f',
         type: 'string',
