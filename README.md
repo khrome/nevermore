@@ -49,8 +49,8 @@ Options:
 Roadmap
 -------
 
-- [ ] raw output mode
-- [ ] stdin, stdout support
+- [x] raw output mode
+- [x] stdin, stdout support
 - [ ] custom dictionary
 - [ ] self randomizing dictionary
 

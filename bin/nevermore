@@ -2,7 +2,15 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { computeIndexKeys, generateHTMLAndCSS } from '../src/index.mjs';
-import { File, Path } from '@environment-safe/file';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+const { cwd } = process;
+
+
+const formatHTML = (html, css, isRaw=false)=>{
+    if(isRaw) return `${css?`<style>${css}</style>`:''}${html}`;
+    return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >${css?`<style>${css}</style>`:''}</head><body>${html}</body></html>`;
+};
 
 yargs(hideBin(process.argv))
     .command('pseudotext [input-file]', 'process the input', (yargs) => {
@@ -14,33 +22,38 @@ yargs(hideBin(process.argv))
         //console.log(argv)
         let input = '';
         if(!argv['input-file']){
-            throw new Error('pipe unsupported!')
+            input = await new Promise((resolve, reject)=>{
+                let data = '';
+                process.stdin.on("data", (chunk) => {
+                    data += chunk.toString();
+                });
+                process.stdin.on("end", () => {
+                    resolve(data);
+                });
+            });
         }else{
-            const inputLocation = Path.join(Path.current, argv['input-file']);
-            const demoFile = new File(inputLocation);
-            await demoFile.load();
-            input = demoFile.body().cast('string'); //.replace(/\n/g, '<br/>');
+            const inputLocation = join(cwd(), argv['input-file']);
+            const body = await readFile(inputLocation);
+            input = body.toString();
         }
         //TODO: custom index
         //TODO: self index
         const { index, root } = await computeIndexKeys(input);
         const { html, css } = await generateHTMLAndCSS(root, index);
         if(argv['unified-output']){
-            const outputFile = new File(argv['unified-output']);
-            outputFile.body(`<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" ><style>${css}</style></head><body>${html}</body></html>`);
-            await outputFile.save();
+            const output = formatHTML(html, css, argv['raw-output']);
+            await writeFile(argv['unified-output'], output);
         }else{
             if(argv['css-output'] && argv['html-output']){
-                const cssLocation = Path.join(Path.current, argv['css-output']);
-                const htmlLocation = Path.join(Path.current, argv['html-output']);
-                const outputFile = new File(htmlLocation);
-                outputFile.body(`<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" ><link rel="stylesheet" href="out.css"></head><body>${html}</body></html>`);
-                await outputFile.save();
-                const outputStyle = new File(cssLocation);
-                outputStyle.body(css);
-                await outputStyle.save();
-            }else{
+                const cssLocation = join(cwd(), argv['css-output']);
+                const htmlLocation = join(cwd(), argv['html-output']);
+                const output = formatHTML(html, null, argv['raw-output']);
+                await writeFile(htmlLocation, output);
+                await writeFile(cssLocation, css);
                 
+            }else{
+                const output = formatHTML(html, css, argv['raw-output']);
+                process.stdout.write(output);
             }
         }
     }).option('unified-output', {
