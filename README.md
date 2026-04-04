@@ -53,7 +53,7 @@ Roadmap
 
 Development
 -----------
-This release is currently unlicensed and should be treated as proprietary, but open meaning I am not currently accepting collaboration while I move toward 1.0 now is this version of the code available for redistribution. I am currently evaluating source licenses for a future release during beta.
+This release is currently unlicensed and should be treated as proprietary, but open meaning I am not currently accepting collaboration while I move toward 1.0 nor is this version of the code available for redistribution. I am currently evaluating source licenses for a future release during beta.
 
 I am also looking for a robot license, should such a thing exist or same generous legal profession want to help in the creation of one.
 
