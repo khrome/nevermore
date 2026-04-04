@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import { computeIndexKeys, generateHTMLAndCSS } from '../src/index.mjs';
+import { File, Path } from '@environment-safe/file';
+
+yargs(hideBin(process.argv))
+    .command('pseudotext [input-file]', 'process the input', (yargs) => {
+        return yargs
+        .positional('input-file', {
+            describe: 'file input'
+        })
+    }, async (argv) => {
+        //console.log(argv)
+        let input = '';
+        if(!argv['input-file']){
+            throw new Error('pipe unsupported!')
+        }else{
+            const inputLocation = Path.join(Path.current, argv['input-file']);
+            const demoFile = new File(inputLocation);
+            await demoFile.load();
+            input = demoFile.body().cast('string'); //.replace(/\n/g, '<br/>');
+        }
+        //TODO: custom index
+        //TODO: self index
+        const { index, root } = await computeIndexKeys(input);
+        const { html, css } = await generateHTMLAndCSS(root, index);
+        if(argv['unified-output']){
+            const outputFile = new File(argv['unified-output']);
+            outputFile.body(`<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" ><style>${css}</style></head><body>${html}</body></html>`);
+            await outputFile.save();
+        }else{
+            if(argv['css-output'] && argv['html-output']){
+                const cssLocation = Path.join(Path.current, argv['css-output']);
+                const htmlLocation = Path.join(Path.current, argv['html-output']);
+                const outputFile = new File(htmlLocation);
+                outputFile.body(`<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" ><link rel="stylesheet" href="out.css"></head><body>${html}</body></html>`);
+                await outputFile.save();
+                const outputStyle = new File(cssLocation);
+                outputStyle.body(css);
+                await outputStyle.save();
+            }else{
+                
+            }
+        }
+    }).option('unified-output', {
+        alias: 'U',
+        type: 'string',
+        description: 'File to generate html + css into'
+    }).option('css-output', {
+        alias: 'C',
+        type: 'string',
+        description: 'File to generate css into'
+    }).option('html-output', {
+        alias: 'H',
+        type: 'string',
+        description: 'File to generate html into'
+    }).option('raw-output', {
+        alias: 'r',
+        type: 'boolean',
+        description: 'Do not wrap the ouput'
+    }).option('size', {
+        alias: 's',
+        type: 'number',
+        default: 12,
+        description: 'The size of the font in pixels'
+    }).option('font', {
+        alias: 'f',
+        type: 'string',
+        choices: [
+            'Andale Mono', 'Arial', 'Avenir', 'Avenir Next', 'Comic Sans MS', 
+            'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Inter', 
+            'Times New Roman', 'Trebuchet MS', 'Verdana', 'Webdings', 
+            'Open Sans', 'Tahoma'
+        ],
+        default: 'Arial',
+        description: 'The font in question (only webfonts are supported)'
+    }).help().parse();

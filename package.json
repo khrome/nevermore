@@ -1,0 +1,47 @@
+{
+    "name": "nevermore",
+    "version": "0.0.1",
+    "keywords": [
+        "adversarial",
+        "content",
+        "ai",
+        "text",
+        "web",
+        "html",
+        "llm"
+    ],
+    "author": "Abbey Hawk Sparrow",
+    "license": "UNLICENSED",
+    "main": "./src/index.mjs",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./src/index.mjs"
+        },
+        "./package.json": {
+            "import": "./package.json"
+        },
+        "./src/index.mjs": {
+            "import": "./src/index.mjs"
+        }
+    },
+    "bin":{
+        "nevermore": "./bin/nevermore"
+    },
+    "scripts":{
+        "single-file-demo": "./bin/nevermore pseudotext -U output.html nevermore.txt",
+        "demo": "./bin/nevermore pseudotext -H out.html -C out.css nevermore.txt"
+    },
+    "dependencies": {
+        "@environment-safe/file": "^0.4.0",
+        "object-hash": "^3.0.0",
+        "parse-english": "^7.0.0",
+        "self-dict": "^1.0.0",
+        "string-pixel-width": "^1.11.0",
+        "thesaurus": "^0.0.1",
+        "unist-util-inspect": "^8.1.0",
+        "wordnet": "^2.0.0",
+        "wordnet-db": "^3.1.14",
+        "yargs": "^18.0.0"
+    }
+}

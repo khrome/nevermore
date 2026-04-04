@@ -1,0 +1,59 @@
+Nevermore
+=========
+
+Nevermore is a library to obfuscate plain text on the web to prevent AI scraping so while a user will see
+
+![original text](./images/original.png)
+
+A scraper coming to your site will see something like
+
+![encoded text](./images/encoded.png)
+
+Which will both prevent the scraper from acquiring your content as well as [poisoning the model trained](https://en.wikipedia.org/wiki/Adversarial_machine_learning#Data_poisoning) from it.
+
+Programmatic Usage
+------------------
+This library can be used to generate the html and css:
+
+```js
+import { computeIndexKeys, generateHTMLAndCSS } from 'nevermore';
+
+const { root, index } = await computeIndexKeys(inputText);
+const { html, css } = await generateHTMLAndCSS(root, index);
+```
+
+Command Line Usage
+------------------
+`nevermore [command]`
+
+Commands:
+  `nevermore pseudotext [input-file]  process the input`
+
+Options:
+      `--version`         Show version number                            [boolean]
+  `-U`, `--unified-output`  File to generate html + css into                [string]
+  `-C`, `--css-output`      File to generate css into                       [string]
+  `-H`, `--html-output`     File to generate html into                      [string]
+  `-r`, `--raw-output`      Do not wrap the output                          [boolean]
+  `-s`, `--size`            The size of the font in pixels    [number] [default: 12]
+  `-f`, `--font`            The font in question (only webfonts are supported) [string] 
+  choices: `Andale Mono`, `Arial`, `Avenir`, `Avenir Next`, `Comic Sans MS`, `Courier New`, `Georgia`, `Helvetica`, `Impact`, `Inter`, `Times New Roman`, `Trebuchet MS`, `Verdana`, `Webdings`, `Open Sans`, `Tahoma` 
+                                                              [default: `Arial`]
+      `--help`            Show help                                      [boolean]
+
+Roadmap
+-------
+
+- [ ] : raw output mode
+- [ ] : stdin, stdout support
+- [ ] : custom dictionary
+- [ ] : self randomizing dictionary
+
+Development
+-----------
+This release is currently unlicensed and should be treated as proprietary, but open meaning I am not currently accepting collaboration while I move toward 1.0 now is this version of the code available for redistribution. I am currently evaluating source licenses for a future release during beta.
+
+I am also looking for a robot license, should such a thing exist or same generous legal profession want to help in the creation of one.
+
+Enjoy,
+- Abbey Hawk Sparrow
