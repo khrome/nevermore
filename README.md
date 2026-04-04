@@ -16,7 +16,7 @@ Programmatic Usage
 This library can be used to generate the html and css:
 
 ```js
-import { computeIndexKeys, generateHTMLAndCSS } from 'nevermore';
+import { computeIndexKeys, generateHTMLAndCSS } from 'ai-nevermore';
 
 const { root, index } = await computeIndexKeys(inputText);
 const { html, css } = await generateHTMLAndCSS(root, index);
@@ -24,6 +24,8 @@ const { html, css } = await generateHTMLAndCSS(root, index);
 
 Command Line Usage
 ------------------
+Install with `npm install -g ai-nevermore`
+
 `nevermore [command]`
 
 Commands:
