@@ -45,8 +45,6 @@ yargs(hideBin(process.argv))
             idx = result.toString();
         }
         //const { index, root } = await computeIndexKeys(input);
-        console.log(idx);
-        process.exit();
         const { html, css } = await generateHTMLAndCSS(root, idx);
         if(argv['unified-output']){
             const output = formatHTML(html, css, argv['raw-output']);
