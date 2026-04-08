@@ -1,6 +1,6 @@
 {
     "name": "ai-nevermore",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "keywords": [
         "adversarial",
         "content",
@@ -31,7 +31,8 @@
     "scripts":{
         "single-file-demo": "./bin/nevermore pseudotext -U output.html nevermore.txt",
         "pipe-demo": "cat nevermore.txt | ./bin/nevermore pseudotext",
-        "demo": "./bin/nevermore pseudotext -H out.html -C out.css nevermore.txt"
+        "demo": "./bin/nevermore pseudotext -H out.html -C out.css nevermore.txt",
+        "help": "./bin/nevermore --help"
     },
     "dependencies": {
         "@environment-safe/file": "^0.4.0",

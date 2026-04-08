@@ -32,18 +32,24 @@ Commands:
   nevermore pseudotext [input-file]  process the input
 
 Options:
-      --version         Show version number                            [boolean]
-  -U, --unified-output  File to generate html + css into                [string]
-  -C, --css-output      File to generate css into                       [string]
-  -H, --html-output     File to generate html into                      [string]
-  -r, --raw-output      Do not wrap the ouput                          [boolean]
-  -s, --size            The size of the font in pixels    [number] [default: 12]
-  -f, --font            The font in question (only webfonts are supported)
+      --version            Show version number                         [boolean]
+  -U, --unified-output     File to generate html + css into             [string]
+  -C, --css-output         File to generate css into                    [string]
+  -H, --html-output        File to generate html into                   [string]
+  -r, --raw-output         Do not wrap the ouput                       [boolean]
+  -m, --render-mode        output mode
+        [string] [choices: "fixed-mode", "inline-mode"] [default: "inline-mode"]
+  -s, --size               The size of the font in pixels (required for
+                           fixed-width)                   [number] [default: 12]
+  -d, --custom-dictionary  A json map of replacement words              [string]
+  -f, --font               The font in question (required for fixed-width; only
+                           webfonts are supported)
       [string] [choices: "Andale Mono", "Arial", "Avenir", "Avenir Next", "Comic
   Sans MS", "Courier New", "Georgia", "Helvetica", "Impact", "Inter", "Times New
            Roman", "Trebuchet MS", "Verdana", "Webdings", "Open Sans", "Tahoma"]
                                                               [default: "Arial"]
-      --help            Show help                                      [boolean]
+      --help               Show help                                   [boolean]
+
 ```
 
 Roadmap
@@ -53,6 +59,7 @@ Roadmap
 - [x] stdin, stdout support
 - [x] custom dictionary
 - [ ] self randomizing dictionary
+- [ ] add a replacement mode (opposed to a tokenizer based solution)
 
 Development
 -----------

@@ -9,7 +9,7 @@ const { cwd } = process;
 
 const formatHTML = (html, css, isRaw=false)=>{
     if(isRaw) return `${css?`<style>${css}</style>`:''}${html}`;
-    return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >${css?`<style>${css}</style>`:''}</head><body>${html}</body></html>`;
+    return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >${css.indexOf('\n')===-1?`<link rel="stylesheet" href="${css}">`:`<style>${css}</style>`}</head><body>${html}</body></html>`;
 };
 
 yargs(hideBin(process.argv))
@@ -45,7 +45,13 @@ yargs(hideBin(process.argv))
             idx = result.toString();
         }
         //const { index, root } = await computeIndexKeys(input);
-        const { html, css } = await generateHTMLAndCSS(root, idx);
+        const { html, css } = await generateHTMLAndCSS(
+            root, idx, {
+                mode: argv['render-mode'], 
+                font: argv['font'], 
+                size: argv['size']
+            }
+        );
         if(argv['unified-output']){
             const output = formatHTML(html, css, argv['raw-output']);
             await writeFile(argv['unified-output'], output);
@@ -53,7 +59,11 @@ yargs(hideBin(process.argv))
             if(argv['css-output'] && argv['html-output']){
                 const cssLocation = join(cwd(), argv['css-output']);
                 const htmlLocation = join(cwd(), argv['html-output']);
-                const output = formatHTML(html, null, argv['raw-output']);
+                const output = formatHTML(
+                    html, 
+                    `./${argv['css-output']}`, 
+                    argv['raw-output']
+                );
                 await writeFile(htmlLocation, output);
                 await writeFile(cssLocation, css);
                 
@@ -78,11 +88,19 @@ yargs(hideBin(process.argv))
         alias: 'r',
         type: 'boolean',
         description: 'Do not wrap the ouput'
+    }).option('render-mode', {
+        alias: 'm',
+        type: 'string',
+        description: 'output mode',
+        default: 'inline-mode',
+        choices: [
+            'fixed-mode', 'inline-mode'
+        ],
     }).option('size', {
         alias: 's',
         type: 'number',
         default: 12,
-        description: 'The size of the font in pixels'
+        description: 'The size of the font in pixels (required for fixed-width)'
     }).option('custom-dictionary', {
         alias: 'd',
         type: 'string',
@@ -97,5 +115,5 @@ yargs(hideBin(process.argv))
             'Open Sans', 'Tahoma'
         ],
         default: 'Arial',
-        description: 'The font in question (only webfonts are supported)'
+        description: 'The font in question (required for fixed-width; only webfonts are supported)'
     }).help().parse();
