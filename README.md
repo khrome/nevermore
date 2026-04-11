@@ -29,14 +29,19 @@ Install with `npm install -g ai-nevermore`
 nevermore [command]
 
 Commands:
-  nevermore pseudotext [input-file]  process the input
+  nevermore pseudotext [input-file]   transform text to poison
+  nevermore pseudoimage [input-file]  transform XOR image encoding
 
 Options:
       --version            Show version number                         [boolean]
+  -K, --key                key to use for decoding the image            [string]
   -U, --unified-output     File to generate html + css into             [string]
   -C, --css-output         File to generate css into                    [string]
+  -I, --image-output       File to output image to                      [string]
   -H, --html-output        File to generate html into                   [string]
   -r, --raw-output         Do not wrap the ouput                       [boolean]
+  -E, --encode             inline encoding                             [boolean]
+  -D, --decode             inline decoding                             [boolean]
   -m, --render-mode        output mode
         [string] [choices: "fixed-mode", "inline-mode"] [default: "inline-mode"]
   -s, --size               The size of the font in pixels (required for
@@ -58,6 +63,8 @@ Roadmap
 - [x] raw output mode
 - [x] stdin, stdout support
 - [x] custom dictionary
+- [x] image encoding
+- [ ] web component decoder
 - [ ] self randomizing dictionary
 - [ ] add a replacement mode (opposed to a tokenizer based solution)
 

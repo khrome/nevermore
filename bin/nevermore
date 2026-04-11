@@ -2,9 +2,12 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { computeIndexKeys, generateHTMLAndCSS } from '../src/index.mjs';
+import { NevermoreImage } from '../src/image.mjs';
+import { Canvas } from '@environment-safe/canvas';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 const { cwd } = process;
+const __dirname = import.meta.dirname;
 
 
 const formatHTML = (html, css, isRaw=false)=>{
@@ -13,7 +16,7 @@ const formatHTML = (html, css, isRaw=false)=>{
 };
 
 yargs(hideBin(process.argv))
-    .command('pseudotext [input-file]', 'process the input', (yargs) => {
+    .command('pseudotext [input-file]', 'transform text to poison', (yargs) => {
         return yargs
         .positional('input-file', {
             describe: 'file input'
@@ -72,6 +75,43 @@ yargs(hideBin(process.argv))
                 process.stdout.write(output);
             }
         }
+    }).command('pseudoimage [input-file]', 'transform XOR image encoding', (yargs) => {
+        return yargs
+        .positional('input-file', {
+            describe: 'file input'
+        })
+    }, async (argv) => {
+        let image = null;
+        if(!argv['input-file']){
+            //TODO: pipe support
+            throw new Error('pipe not yet supported');
+        }else{
+            const options = {
+                url: argv['input-file'],
+                maskDir: join(__dirname, '..', 'textures')
+            };
+            if(argv['key']){
+                options.key = argv['key']
+            }
+            image = new NevermoreImage(options);
+            await image.ready;
+        }
+        if(image && argv['image-output']){
+            let canvas = null; 
+            if(argv['encode']){
+                canvas = await image.encode();
+            }
+            if(argv['decode']){
+                canvas = await image.decode();
+            }
+            Canvas.save(argv['image-output'], canvas);
+        }else{
+            throw new Error('piped output not yet supported');
+        }
+    }).option('key', {
+        alias: 'K',
+        type: 'string',
+        description: 'key to use for decoding the image'
     }).option('unified-output', {
         alias: 'U',
         type: 'string',
@@ -80,6 +120,10 @@ yargs(hideBin(process.argv))
         alias: 'C',
         type: 'string',
         description: 'File to generate css into'
+    }).option('image-output', {
+        alias: 'I',
+        type: 'string',
+        description: 'File to output image to'
     }).option('html-output', {
         alias: 'H',
         type: 'string',
@@ -88,6 +132,14 @@ yargs(hideBin(process.argv))
         alias: 'r',
         type: 'boolean',
         description: 'Do not wrap the ouput'
+    }).option('encode', {
+        alias: 'E',
+        type: 'boolean',
+        description: 'inline encoding'
+    }).option('decode', {
+        alias: 'D',
+        type: 'boolean',
+        description: 'inline decoding'
     }).option('render-mode', {
         alias: 'm',
         type: 'string',
