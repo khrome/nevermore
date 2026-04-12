@@ -77,6 +77,7 @@ export class NevermoreImage{
         if(!(
             options.masks || options.maskDir
         )) throw new Error('a set of masks are required');
+        this.textureDictionary = options.dictionary;
         this.ready = new Promise(async (resolve, reject)=>{
             // load all masks
             // TODO: load from cache

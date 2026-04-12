@@ -1,7 +1,11 @@
 Nevermore
 =========
 
-Nevermore is a library to obfuscate plain text on the web to prevent AI scraping so while a user will see
+Nevermore is a library to obfuscate media on the web to prevent AI scraping.
+
+Text
+---
+while a user will see
 
 ![original text](./images/original.png)
 
@@ -10,6 +14,44 @@ A scraper coming to your site will see something like
 ![encoded text](./images/encoded.png)
 
 Which will both prevent the scraper from acquiring your content as well as [poisoning the model trained](https://en.wikipedia.org/wiki/Adversarial_machine_learning#Data_poisoning) from it.
+
+Images
+------
+
+First you encode an image  with: 
+
+`nevermore pseudoimage <target> --image-output <output> --encode`
+
+which produces and encoded image, seemingly static filled.
+
+Then you include the encoded image along with it's key(This uses the source directly, but it is also is compatible with your favorite build tool) the stub entries must point at any valid ESM file and are not used.
+
+```html
+<html>
+    <head>
+        <script type="importmap">
+            {"imports":{
+                "node:os":"<path-to-stub>",
+                "node:stream":"<path-to-stub>",
+                "fs":"<path-to-stub>",
+                "os":"<path-to-stub>",
+                "module":"<path-to-stub>",
+                "nevermore/encoded-image":"./node_modules/nevermore/src/encoded-image-component.mjs",
+                "@environment-safe/canvas":"./node_modules/@environment-safe/canvas/src/index.mjs",
+                "@environment-safe/file":"./node_modules/@environment-safe/file/src/index.mjs",
+                "@environment-safe/elements":"./node_modules/@environment-safe/elements/src/index.mjs",
+                "@environment-safe/runtime-context":"./node_modules/@environment-safe/runtime-context/src/index.mjs"
+            }}
+        </script>
+        <script type="module">
+            import 'nevermore/encoded-image';
+        </script>
+    </head>
+    <body>
+        <encoded-image src="encoded-image-location" key="VFYZT-HPTRG-PGHRT"></encoded-image>
+    </body>
+</html>
+```
 
 Programmatic Usage
 ------------------
@@ -20,6 +62,19 @@ import { computeIndexKeys, generateHTMLAndCSS } from 'ai-nevermore';
 
 const { root, index } = await computeIndexKeys(inputText);
 const { html, css } = await generateHTMLAndCSS(root, index);
+```
+
+You can programmatically encode/decode images:
+```js
+const image = new NevermoreImage({
+    url:'<target>',
+    maskDir: '<texture_dir>'
+});
+await image.ready;
+const canvas = image.encode();
+await Canvas.save('./encoded.jpg', canvas);
+const decoded = image.decode();
+await Canvas.save('./decoded.jpg', decoded);
 ```
 
 Command Line Usage

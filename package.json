@@ -21,6 +21,12 @@
         "./image": {
             "import": "./src/image.mjs"
         },
+        "./encoded-image": {
+            "import": "./src/encoded-image-component.mjs"
+        },
+        "./src/encoded-image-component.mjs": {
+            "import": "./src/encoded-image-component.mjs"
+        },
         "./src/image.mjs": {
             "import": "./src/image.mjs"
         },
@@ -38,12 +44,14 @@
         "single-file-demo": "./bin/nevermore pseudotext -U output.html nevermore.txt",
         "pipe-demo": "cat nevermore.txt | ./bin/nevermore pseudotext",
         "demo": "./bin/nevermore pseudotext -H out.html -C out.css nevermore.txt",
+        "web-decode-demo": "open http://localhost:8083/; npx http-server --cors --port 8083",
         "image-encode": "./bin/nevermore pseudoimage ./test.jpg --image-output out.jpg --encode",
         "image-decode": "./bin/nevermore pseudoimage ./out.jpg --image-output decoded.jpg --decode",
         "help": "./bin/nevermore --help"
     },
     "dependencies": {
         "@environment-safe/canvas": "^4.2.3",
+        "@environment-safe/elements": "^0.0.4",
         "@environment-safe/file": "^0.4.3",
         "object-hash": "^3.0.0",
         "parse-english": "^7.0.0",
