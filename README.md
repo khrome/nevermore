@@ -7,11 +7,11 @@ Text
 ---
 while a user will see
 
-![original text](./images/original.png)
+![original text](https://raw.githubusercontent.com/khrome/nevermore/master/images/original.png)
 
 A scraper coming to your site will see something like
 
-![encoded text](./images/encoded.png)
+![encoded text](https://raw.githubusercontent.com/khrome/nevermore/master/images/encoded.png)
 
 Which will both prevent the scraper from acquiring your content as well as [poisoning the model trained](https://en.wikipedia.org/wiki/Adversarial_machine_learning#Data_poisoning) from it.
 
