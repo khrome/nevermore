@@ -77,10 +77,12 @@ export const inlineMode = {
     },
     ParagraphNode : {
         pre : ({font, size, node})=>{
-            return `<p>`;
+            //return `<p>`;
+            return '';
         },
         post : ({font, size, node})=>{
-            return `</p>`;
+            //return `</p>`;
+            return '';
         }
     },
     WhiteSpaceNode :{

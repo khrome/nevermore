@@ -97,7 +97,7 @@ export const computeIndexKeys = async (textBody)=>{
     return { index, root: node };
 };
 
-export const generateHTMLAndCSS = async (node, index, options)=>{
+export const generateHTMLAndCSS = async (node, index, options={})=>{
     await checkThesaurusInit();
     const { html, css } = await render(
         node, index, options.mode, options.font, options.size

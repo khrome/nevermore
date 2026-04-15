@@ -1,11 +1,12 @@
 {
     "name": "ai-nevermore",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "keywords": [
         "adversarial",
         "content",
         "ai",
         "text",
+        "images",
         "web",
         "html",
         "llm"
@@ -55,6 +56,7 @@
         "@environment-safe/file": "^0.4.3",
         "object-hash": "^3.0.0",
         "parse-english": "^7.0.0",
+        "parse5": "^8.0.0",
         "self-dict": "^1.0.0",
         "string-pixel-width": "^1.11.0",
         "thesaurus": "^0.0.1",

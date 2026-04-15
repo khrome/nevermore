@@ -12,6 +12,22 @@ const loadImage = async (url)=>{
   });
 };
 
+const canvasFromDataUrl = async (url)=>{
+    return new Promise((r)=>{
+        const img = new Image();
+        img.onload = function() {
+            const canvas = new Canvas({ 
+                height: img.height, 
+                width: img.width 
+            });
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            r(canvas);
+        };
+        img.src = url
+    });
+}
+
 export class EncodedImage extends HTMLElement {
     constructor() {
         super();
@@ -36,15 +52,17 @@ export class EncodedImage extends HTMLElement {
             canvas.height = image.height;
             const context = canvas.getContext('2d');
             context.drawImage(image, 0, 0);
-            console.log('.')
             const masks = await textureFuture;
             const dictionary = {};
             masks.forEach((mask, index)=>{
                 dictionary[(index + 10).toString(36).toUpperCase()] = mask;
-                //console.log( (index + 10).toString(36).toUpperCase() );
             });
-            console.log('>>>', { url, masks, key })
-            this.image = new NevermoreImage({ url, masks, key, dictionary });
+            if(url.slice(0, 10) === 'data:image'){
+                const canvas = await canvasFromDataUrl(url);
+                this.image = new NevermoreImage({ canvas, masks, key, dictionary });
+            }else{
+                this.image = new NevermoreImage({ url, masks, key, dictionary });
+            }
             await this.image.ready;
             this.image.decode();
             context.drawImage(this.image.canvas, 0, 0);

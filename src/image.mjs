@@ -118,7 +118,7 @@ export class NevermoreImage{
                 this.textureDictionary = textureDictionary;
             }
             this.masks = masks;
-            this.canvas = options.image;
+            this.canvas = options.canvas;
             // masks loaded, now load the base image
             if(options.url){
                 this.canvas = await Canvas.load(options.url);
@@ -130,7 +130,7 @@ export class NevermoreImage{
             }
             //make an id
             this.key = options.key || `${makeKey(5)}-${makeKey(5)}-${makeKey(5)}`;
-            console.log('KEY:', this.key);
+            //console.log('KEY:', this.key);
             //we're ready to do work
             resolve();
         });

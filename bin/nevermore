@@ -3,7 +3,9 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { computeIndexKeys, generateHTMLAndCSS } from '../src/index.mjs';
 import { NevermoreImage } from '../src/image.mjs';
+import { transformHTML } from '../src/html.mjs'
 import { Canvas } from '@environment-safe/canvas';
+import { parse } from 'parse5';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 const { cwd } = process;
@@ -100,6 +102,7 @@ yargs(hideBin(process.argv))
             let canvas = null; 
             if(argv['encode']){
                 canvas = await image.encode();
+                console.log('KEY:', image.key);
             }
             if(argv['decode']){
                 canvas = await image.decode();
@@ -107,6 +110,27 @@ yargs(hideBin(process.argv))
             Canvas.save(argv['image-output'], canvas);
         }else{
             throw new Error('piped output not yet supported');
+        }
+    }).command('pseudomarkup [input-file]', 'transform html content', (yargs) => {
+        return yargs
+        .positional('input-file', {
+            describe: 'file input'
+        })
+    }, async (argv) => {
+        let result = null;
+        if(!argv['input-file']){
+            //TODO: pipe support
+            throw new Error('pipe not yet supported');
+        }else{
+            const target = await readFile(argv['input-file']);
+            const parsed = parse(target.toString());
+            result = await transformHTML(parsed);
+        }
+        if(result && argv['unified-output']){
+            await writeFile(argv['unified-output'], result);
+        }else{
+            console.log(result);
+            //throw new Error('piped output not yet supported');
         }
     }).option('key', {
         alias: 'K',

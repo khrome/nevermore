@@ -53,6 +53,14 @@ Then you include the encoded image along with it's key(This uses the source dire
 </html>
 ```
 
+Markup
+------
+Nevermore can traverse and inline transform all text and image elements in an HTML body.
+
+`nevermore pseudomarkup <target> --unified-output <output location>`
+
+this puts imports, styles and image decodes all inline.
+
 Programmatic Usage
 ------------------
 This library can be used to generate the html and css:
@@ -84,8 +92,9 @@ Install with `npm install -g ai-nevermore`
 nevermore [command]
 
 Commands:
-  nevermore pseudotext [input-file]   transform text to poison
-  nevermore pseudoimage [input-file]  transform XOR image encoding
+  nevermore pseudotext [input-file]    transform text to poison
+  nevermore pseudoimage [input-file]   transform XOR image encoding
+  nevermore pseudomarkup [input-file]  transform html content
 
 Options:
       --version            Show version number                         [boolean]
