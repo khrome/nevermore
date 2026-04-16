@@ -124,7 +124,12 @@ yargs(hideBin(process.argv))
         }else{
             const target = await readFile(argv['input-file']);
             const parsed = parse(target.toString());
-            result = await transformHTML(parsed);
+            let idx = null;
+            if(argv['custom-dictionary']){
+                const result = await readFile(argv['custom-dictionary']);
+                idx = result.toString();
+            }
+            result = await transformHTML(parsed, idx);
         }
         if(result && argv['unified-output']){
             await writeFile(argv['unified-output'], result);
