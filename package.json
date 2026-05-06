@@ -1,6 +1,6 @@
 {
     "name": "ai-nevermore",
-    "version": "0.0.9",
+    "version": "0.1.0",
     "keywords": [
         "adversarial",
         "content",
@@ -51,7 +51,7 @@
         "help": "./bin/nevermore --help"
     },
     "dependencies": {
-        "@environment-safe/canvas": "^4.2.3",
+        "@environment-safe/canvas": "^4.3.0",
         "@environment-safe/elements": "^0.0.4",
         "@environment-safe/file": "^0.4.3",
         "object-hash": "^3.0.0",

@@ -128,7 +128,8 @@ Roadmap
 - [x] stdin, stdout support
 - [x] custom dictionary
 - [x] image encoding
-- [ ] web component decoder
+- [x] web component decoder
+- [x] markup obfuscation
 - [ ] self randomizing dictionary
 - [ ] add a replacement mode (opposed to a tokenizer based solution)
 
