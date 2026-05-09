@@ -3,6 +3,22 @@ Nevermore
 
 Nevermore is a library to obfuscate media on the web to prevent AI scraping.
 
+The following table is a matrix of potential techniques and media:
+
+|              | Random Poison  | Targeted Poison | Obfuscation   | Encryption |
+|--------------|----------------|-----------------|---------------|------------|
+| Text         | Nevermore      | Nevermore[TBD]  | Nevermore     |            |
+| Image        |                | Nightshade      | Nevermore     |            |
+| Video        | Nevermore[TBD] |                 | Nevermore[TBD]|            |
+| Audio        |                | HarmonyCloak    |               |            |
+| 3D Models    | Nevermore[TBD] |                 | Nevermore[TBD]|            |
+| Code         | Nevermore[TBD] |                 |               |            |
+
+There are conceptually 2 other techniques to fight AI.
+
+1) Scrape traversal traps: dynamically generated nonsense hierarchy of pages to indefinitely trap the scraper on your site. It incurs additional hosting costs, but gives the possibility of being blacklisted by the scraper. Examples of this include [Nepenthes](https://zadzmo.org/code/nepenthes/) and [Iocaine](https://iocaine.madhouse-project.org)
+2) Scrape Poison: This technique exploits weaknesses in the scrape engines or or selector format to prevent scraping of the correct data. This is currently only theoretical, but is something we are looking at.
+
 Text
 ---
 while a user will see
@@ -130,8 +146,25 @@ Roadmap
 - [x] image encoding
 - [x] web component decoder
 - [x] markup obfuscation
+- [ ] windows compatibility
 - [ ] self randomizing dictionary
 - [ ] add a replacement mode (opposed to a tokenizer based solution)
+- [ ] bindings
+    - [ ] PHP CL binding
+    - [ ] Python CL binding
+    - [ ] Java CL binding
+    - [ ] Ruby CL binding
+- [ ] native CMS Support
+    - [ ] KeystoneJS
+    - [ ] Ghost
+    - [ ] Strapi
+- [ ] other CMS Support
+    - [ ] wordpress
+- [ ] Framework Support
+    - [ ] express
+    - [ ] next.js
+    - [ ] laravel
+    - [ ] rails
 
 Development
 -----------
