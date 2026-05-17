@@ -1,6 +1,6 @@
 {
     "name": "ai-nevermore",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "keywords": [
         "adversarial",
         "content",
@@ -21,6 +21,9 @@
         },
         "./image": {
             "import": "./src/image.mjs"
+        },
+        "./html": {
+            "import": "./src/html.mjs"
         },
         "./encoded-image": {
             "import": "./src/encoded-image-component.mjs"
