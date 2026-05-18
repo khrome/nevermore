@@ -1,10 +1,10 @@
 import { computeIndexKeys, generateHTMLAndCSS } from '../src/index.mjs';
 import { NevermoreImage } from '../src/image.mjs';
 
-export const transformHTML = async (node, idx)=>{
+export const transformHTML = async (node, idx, textureDir)=>{
     let content = '';
     if(node.childNodes) for(let lcv=0; lcv < node.childNodes.length; lcv++){
-        content += await transformHTML(node.childNodes[lcv]);
+        content += await transformHTML(node.childNodes[lcv], idx, textureDir);
     }
     
     try{
@@ -23,12 +23,16 @@ export const transformHTML = async (node, idx)=>{
                 break;
             case 'img':
                 const srcAttr = node.attrs.find((attr)=> attr.name.toLowerCase() === 'src');
-                const image = new NevermoreImage({ url: srcAttr.value, maskDir:'./textures'});
+                const image = new NevermoreImage({ 
+                    url: srcAttr.value, 
+                    maskDir: textureDir ||'./textures'
+                });
                 await image.ready;
                 const canvas = image.encode();
                 const url = canvas.toDataURL('jpg');
                 //return `<img src="${url}" ></img>`;
                 return `<encoded-image src="${url}" key="${image.key}"></encoded-image>`;
+                break;
             case 'head':  
                 const att = node.attrs?' '+node.attrs.map((attr)=>`${attr.name}="${attr.value}"`).join(' '):'';
                 return `<${node.tagName}${att}>${content}<script type="importmap">
@@ -47,7 +51,8 @@ export const transformHTML = async (node, idx)=>{
                 </script>
                 <script type="module">
                     import 'nevermore/encoded-image-component';
-                </script></${node.tagName}>`
+                </script></${node.tagName}>`;
+                break;
             default: 
                 const attrs = node.attrs?' '+node.attrs.map((attr)=>`${attr.name}="${attr.value}"`).join(' '):'';
                 if(node.tagName) return `<${node.tagName}${attrs}>${content}</${node.tagName}>`

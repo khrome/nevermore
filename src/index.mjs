@@ -71,26 +71,26 @@ export const computeIndexKeys = async (textBody)=>{
     const parser = new ParseEnglish();
     const node = parser.parse(textBody);
     const index = {};
+    const skip = ['.']
     await traverse(node, async (thisNode)=>{
         let res = null;
-        if(thisNode.value){
+        if(thisNode.value && thisNode.type === 'TextNode'){
+            //if(skip.indexOf() !== -1) return;
             try{
                 res = await define(thisNode.value);
-            }catch(ex){}
+            }catch(ex){ }
         }
         if(thisNode.type === 'TextNode' && res){
             thisNode.word = res.word;
             thisNode.types = res.types;
             thisNode.definitions = res.definitions;
             thisNode.synonyms = res.synonyms;
-            //const thesres = await thesaurus.lookup(thisNode.word);
             if(
                 thisNode.types.indexOf('verb') !== -1 || 
                 thisNode.types.indexOf('noun') !== -1 
             ){
                 thisNode.replacement = await randomWord();
                 index[thisNode.word] = thisNode.replacement;
-                //index[thisNode.word] = thisNode.synonyms[0];
             }
         }
     });

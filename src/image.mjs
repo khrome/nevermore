@@ -79,60 +79,63 @@ export class NevermoreImage{
         )) throw new Error('a set of masks are required');
         this.textureDictionary = options.dictionary;
         this.ready = new Promise(async (resolve, reject)=>{
-            // load all masks
-            // TODO: load from cache
-            let masks = options.masks;
-            const textureWork = [];
-            const textureDictionary = {};
-            if(options.maskDir){
-                const types = ['jpg', 'jpeg', 'gif', 'png'];
-                const files = (await File.list(options.maskDir)).filter((name)=>{
-                    const parts = name.split('.');
-                    const ext = parts.pop().toLowerCase();
-                    return types.indexOf(ext) !== -1;
-                    // TODO: support mime through magic numbers
-                });
-                const fileLoads = [];
-                for(let lcv=0; lcv<files.length; lcv++){
-                    const pth = new Path(files[lcv]);
-                    if(!pth.parsed) throw new Error('path not parsed');
-                    const parsed = pth.parsed.posix || pth.parsed.win32;
-                    const canvasLoad = Canvas.load(
-                        Path.join(options.maskDir, files[lcv])
-                    );
-                    textureWork.push(new Promise(async (resolve)=>{
-                        resolve({
-                            name: parsed.name,
-                            canvas: await canvasLoad
-                        });
-                    }))
-                    fileLoads.push(Canvas.load(Path.join(options.maskDir, files[lcv])));
+            try{
+                // load all masks
+                // TODO: load from cache
+                let masks = options.masks;
+                const textureWork = [];
+                const textureDictionary = {};
+                if(options.maskDir){
+                    const types = ['jpg', 'jpeg', 'gif', 'png'];
+                    const files = (await File.list(options.maskDir)).filter((name)=>{
+                        const parts = name.split('.');
+                        const ext = parts.pop().toLowerCase();
+                        return types.indexOf(ext) !== -1;
+                        // TODO: support mime through magic numbers
+                    });
+                    const fileLoads = [];
+                    for(let lcv=0; lcv<files.length; lcv++){
+                        const pth = new Path(files[lcv]);
+                        if(!pth.parsed) throw new Error('path not parsed');
+                        const parsed = pth.parsed.posix || pth.parsed.win32;
+                        const canvasLoad = Canvas.load(
+                            Path.join(options.maskDir, files[lcv])
+                        );
+                        textureWork.push(new Promise(async (resolve)=>{
+                            resolve({
+                                name: parsed.name,
+                                canvas: await canvasLoad
+                            });
+                        }))
+                        fileLoads.push(Canvas.load(Path.join(options.maskDir, files[lcv])));
+                    }
+                    masks = await Promise.all(fileLoads);
+                    const texturesLoaded = await Promise.all(textureWork);
+                    for(let lcv=0; lcv<texturesLoaded.length; lcv++){
+                        textureDictionary[
+                            texturesLoaded[lcv].name
+                        ] = texturesLoaded[lcv].canvas;
+                    };
+                    this.textureDictionary = textureDictionary;
                 }
-                masks = await Promise.all(fileLoads);
-                const texturesLoaded = await Promise.all(textureWork);
-                for(let lcv=0; lcv<texturesLoaded.length; lcv++){
-                    textureDictionary[
-                        texturesLoaded[lcv].name
-                    ] = texturesLoaded[lcv].canvas;
-                };
-                this.textureDictionary = textureDictionary;
+                this.masks = masks;
+                this.canvas = options.canvas;
+                // masks loaded, now load the base image
+                if(options.url){
+                    this.canvas = await Canvas.load(options.url);
+                }
+                if(!this.canvas){
+                    return reject(new Error(
+                        'no base image provided to Image File'
+                    ));
+                }
+                //make an id
+                this.key = options.key || `${makeKey(5)}-${makeKey(5)}-${makeKey(5)}`;
+                //we're ready to do work
+                resolve();
+            }catch(ex){
+                reject(ex);
             }
-            this.masks = masks;
-            this.canvas = options.canvas;
-            // masks loaded, now load the base image
-            if(options.url){
-                this.canvas = await Canvas.load(options.url);
-            }
-            if(!this.canvas){
-                return reject(new Error(
-                    'no base image provided to Image File'
-                ));
-            }
-            //make an id
-            this.key = options.key || `${makeKey(5)}-${makeKey(5)}-${makeKey(5)}`;
-            //console.log('KEY:', this.key);
-            //we're ready to do work
-            resolve();
         });
     }
     
